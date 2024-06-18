@@ -19,10 +19,11 @@
             display: grid;
             grid-template-columns: repeat(4, 60px); /* 4 sütun */
             grid-template-rows: repeat(5, 30px); /* 5 satır */
-            gap: 8px; /* Sütun ve satırlar arasındaki boşluk */
-            padding: 8px;
+            gap: 25px; /* Sütun ve satırlar arasındaki boşluk */
+            padding: 20px;
+            row-gap: 40px;
             background: #F3F7EC;
-            margin-top: 12px;
+            margin-top: 20px;
         }
 
         .grid-item {
@@ -32,15 +33,18 @@
             align-items: center;
             border-radius: 10%;
             cursor: pointer;
-           
+            width: 60px;
+            height: 50px;
             font-family: 'DSEG7Classic-Regular', monospace; /* Dijital font */
+            font-weight: bold;
+            font-size: 25px;
         }
 
         .ana-ekran {
             border: 1px solid #005C78;
             border-width: 4px 1px 1px 1px;
-            width: 280px;
-            height: 270px;
+            width: 350px;
+            height: 480px;
             margin-left: 5px;
             padding-right: 5px;
             margin-top: 40px;
@@ -48,14 +52,14 @@
         }
 
         .sonuc-ekrani-input {
-            width: 98%; /* Genişlik ayarı */
+            width: 90%; /* Genişlik ayarı */
             height: 100%; /* Yükseklik ayarı */
-            margin: 0 2px;
+            margin: 0 15px;
             padding: 0; /* Kenarlıklar için yer aç */
             box-sizing: border-box; /* Kenarlıklar dahil */
             text-align: right; /* Metinlerin sağdan sola hizalanması */
             font-family: 'DSEG7Classic-Regular', monospace; /* Dijital font */
-            font-size: 1.7em; /* Font boyutunu ayarlama */
+            font-size: 40px; /* Font boyutunu ayarlama */
             outline: none; /* Odak çerçevesini kaldırma */
             border: 2px solid #006989;
         }
