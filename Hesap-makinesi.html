@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hesap Makinesi</title>
+    <link href="https://fonts.googleapis.com/css2?family=DSEG7Classic-Regular&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #cecbcb; /* Arka plan rengi */
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(4, 60px); /* 4 sütun */
+            grid-template-rows: repeat(5, 30px); /* 5 satır */
+            gap: 8px; /* Sütun ve satırlar arasındaki boşluk */
+            padding: 8px;
+            background: #F3F7EC;
+            margin-top: 12px;
+        }
+
+        .grid-item {
+            background: #E88D67;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10%;
+            cursor: pointer;
+           
+            font-family: 'DSEG7Classic-Regular', monospace; /* Dijital font */
+        }
+
+        .ana-ekran {
+            border: 1px solid black;
+            border-width: 4px 1px 1px 1px;
+            width: 280px;
+            height: 270px;
+            margin-left: 5px;
+            padding-right: 5px;
+            margin-top: 40px;
+            background: #F3F7EC;
+        }
+
+        .sonuc-ekrani-input {
+            width: 98%; /* Genişlik ayarı */
+            height: 100%; /* Yükseklik ayarı */
+            margin: 0 2px;
+            padding: 0; /* Kenarlıklar için yer aç */
+            box-sizing: border-box; /* Kenarlıklar dahil */
+            text-align: right; /* Metinlerin sağdan sola hizalanması */
+            font-family: 'DSEG7Classic-Regular', monospace; /* Dijital font */
+            font-size: 1.7em; /* Font boyutunu ayarlama */
+            outline: none; /* Odak çerçevesini kaldırma */
+            border: 2px solid #006989;
+        }
+
+        .input {
+            margin-left: 5px;
+            margin-top: 15px;
+        }
+        
+        .grid-item:hover {
+        	opacity: 0.8;
+        }
+        
+        .grid-item:active {
+        	background-color: #DC5F00;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body onload="initializeCalculator()">
+    <div class="ana-ekran">
+        <div class="input"><input class="sonuc-ekrani-input" readonly>			</div>
+        <div class="grid-container">
+            <div class="grid-item" onclick="tusBasildi('C')">C</div>
+            <div class="grid-item" onclick="geriSil()">&#9003;</div>
+            <div class="grid-item" onclick="yuzdeHesapla()">%</div>
+            <div class="grid-item" onclick="tusBasildi('/')">/</div>
+            <div class="grid-item" onclick="tusBasildi('7')">7</div>
+            <div class="grid-item" onclick="tusBasildi('8')">8</div>
+            <div class="grid-item" onclick="tusBasildi('9')">9</div>
+            <div class="grid-item" onclick="tusBasildi('*')">x</div>
+            <div class="grid-item" onclick="tusBasildi('4')">4</div>
+            <div class="grid-item" onclick="tusBasildi('5')">5</div>
+            <div class="grid-item" onclick="tusBasildi('6')">6</div>
+            <div class="grid-item" onclick="tusBasildi('-')">-</div>
+            <div class="grid-item" onclick="tusBasildi('1')">1</div>
+            <div class="grid-item" onclick="tusBasildi('2')">2</div>
+            <div class="grid-item" onclick="tusBasildi('3')">3</div>
+            <div class="grid-item" onclick="tusBasildi('+')">+</div>
+            <div class="grid-item" onclick="kdvHesapla ()">kdv</div>
+            <div class="grid-item" onclick="tusBasildi('0')">0</div>
+            <div class="grid-item" onclick="tusBasildi(',')">,</div>
+            <div class="grid-item" onclick="hesapla()">=</div>
+        </div>
+    </div> 
+
+    <script>
+        function initializeCalculator() {
+            var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
+            sonucEkrani.value = '0'; // Sayfa yüklendiğinde ekranın başlangıç değeri 0 olsun
+        }
+
+        function tusBasildi(deger) {
+            var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
+
+            if (deger === 'C') {
+                sonucEkrani.value = '0'; // C'ye basıldığında sıfırla
+            } else if (sonucEkrani.value === '0' && deger !== ',') {
+                sonucEkrani.value = deger; // Sıfır ise ve virgül dışında herhangi bir sayıya basıldığında sıfırı temizle
+            } else {
+                sonucEkrani.value += deger; // Diğer durumlar için değeri ekle
+            }
+        }
+
+        function hesapla() {
+            var expression = document.querySelector('.sonuc-ekrani-input').value;
+            var result = eval(expression.replace(',', '.'));
+            document.querySelector('.sonuc-ekrani-input').value = result.toString().replace('.', ',');
+        }
+
+        function geriSil() {
+            var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
+            var currentValue = sonucEkrani.value;
+
+            if (currentValue !== '0' && currentValue.length > 0) {
+                sonucEkrani.value = currentValue.slice(0, -1); // En sağdaki karakteri sil
+                if (sonucEkrani.value === '') {
+                    sonucEkrani.value = '0'; // Silinen son karakter sonucunda boşsa sıfırla
+                }
+            }
+        }
+
+        function yuzdeHesapla() {
+            var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
+            var currentValue = parseFloat(sonucEkrani.value.replace(',', '.'));
+
+            if (!isNaN(currentValue)) {
+                sonucEkrani.value = (currentValue / 100).toString().replace('.', ',');
+            }
+        }
+        
+        function kdvHesapla () {
+        	var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
+            var currentValue = parseFloat(sonucEkrani.value.replace(',', '.'));
+            
+            if (!isNaN(currentValue)) {
+            	sonucEkrani.value = ((currentValue / 100) * 20).toString().replace('.', ',');
+            }
+        }
+    </script>
+</body>
+</html>
