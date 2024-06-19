@@ -166,21 +166,24 @@
         }
 
         document.addEventListener('keydown', function(event) {
-            var key = event.key;
+    var key = event.key.toLowerCase(); // Basılan tuşun küçük harf olarak alınması
+
     
-            // Belirli tuşlara basıldığında ilgili fonksiyonları çağır
-            if (key >= '0' && key <= '9' || key === ',' || key === '+' || key === '-' || key === '*' || key === '/') {
-                tusBasildi(key === '*' ? 'x' : key);
-            } else if (key === 'Enter') {
-                hesapla();
-            } else if (key === 'Backspace') {
-                geriSil();
-            } else if (key === 'Escape') {
-                tusBasildi('C');
-            } else if (key === '%') {
-                yuzdeHesapla();
-            }
-        });
+    if ((key >= '0' && key <= '9') || key === ',' || key === '+' || key === '-' || key === '*' || key === '/') {
+        tusBasildi(key === '*' ? 'x' : key);
+    } else if (key === 'enter') {
+        hesapla();
+    } else if (key === 'backspace') { 
+        geriSil();
+    } else if (key === 'end') { 
+        tusBasildi('C');
+    } else if (key === '%') {
+        yuzdeHesapla();
+    } else if (key === 'k') { 
+        kdvHesapla();
+        event.preventDefault(); // Varsayılan davranışı engelle
+    }
+});
     </script>
 </body>
 </html>
