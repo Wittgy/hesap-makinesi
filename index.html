@@ -157,12 +157,10 @@
         }
         
         function kdvHesapla () {
-        	var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
-            var currentValue = parseFloat(sonucEkrani.value.replace(',', '.'));
-            
-            if (!isNaN(currentValue)) {
-            	sonucEkrani.value = ((currentValue / 100) * 20).toString().replace('.', ',');
-            }
+        	var icerik = document.querySelector('.sonuc-ekrani-input');
+            var deger = parseFloat(icerik.value.replace(',', '.'));
+            var kdvAl = ((deger / 100) * 20) + deger;
+            document.querySelector('.sonuc-ekrani-input').value = kdvAl.toString().replace('.', ',');
         }
 
         document.addEventListener('keydown', function(event) {
