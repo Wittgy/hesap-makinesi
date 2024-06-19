@@ -164,6 +164,23 @@
             	sonucEkrani.value = ((currentValue / 100) * 20).toString().replace('.', ',');
             }
         }
+
+        document.addEventListener('keydown', function(event) {
+            var key = event.key;
+    
+            // Belirli tuşlara basıldığında ilgili fonksiyonları çağır
+            if (key >= '0' && key <= '9' || key === ',' || key === '+' || key === '-' || key === '*' || key === '/') {
+                tusBasildi(key === '*' ? 'x' : key);
+            } else if (key === 'Enter') {
+                hesapla();
+            } else if (key === 'Backspace') {
+                geriSil();
+            } else if (key === 'Escape') {
+                tusBasildi('C');
+            } else if (key === '%') {
+                yuzdeHesapla();
+            }
+        });
     </script>
 </body>
 </html>
