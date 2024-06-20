@@ -16,6 +16,7 @@
         }
 
         .grid-container {
+            position: relative;
             display: grid;
             grid-template-columns: repeat(4, 60px); /* 4 sütun */
             grid-template-rows: repeat(5, 30px); /* 5 satır */
@@ -70,11 +71,11 @@
         }
         
         .grid-item:hover {
-        	opacity: 0.8;
+            opacity: 0.8;
         }
         
         .grid-item:active {
-        	background-color: #DC5F00;
+            background-color: #DC5F00;
             opacity: 1;
         }
 
@@ -82,9 +83,95 @@
             background-color: #006989;
             color: white;
         }
+        
+        #showAlertBtn {
+        
+          width: 20px;
+          height: 20px;
+          position: absolute;
+          top: 288px; /* Yükseklik ayarı */
+          right: 254px; /* Sağdan mesafe ayarı */
+          border: 2px solid white; /* Kenarlık rengi */
+          border-radius: 50%; /* Yuvarlak kenarlık */
+          text-align: center; /* Metin hizalaması */
+          background-color: red; /* Arka plan rengi */
+          color: white; /* Metin rengi */
+          cursor: pointer; /* İşaretçi stilini göster */
+          font-size: 14px; /* Metin boyutu */
+          line-height: 20px; /* Metin satır yüksekliği */
+      }
+
+        
+        #showAlertBtn:hover {
+            border: 2px solid black;
+            font-weight: bolder;
+            font-size: 24px;
+            width: 25px;
+            height: 25px;
+            border-color: #006989;
+            
+        }
+        
+        .alert {
+            position: absolute; /* Mutlak konumlandırma */
+            top: -250px; /* Başlangıçta yukarıda saklanmış */
+            left: 50%; /* Orta hizalamak için sol kenardan uzaklık */
+            transform: translateX(-50%); /* Yatay hizalama için */
+            background-color: #006989; /* Arkaplan rengi */
+            color: white; /* Yazı rengi */
+            padding: 15px; /* İçerik kenar boşluğu */
+            border-radius: 10px; /* Kenar yarıçapı */
+            z-index: 1; /* Diğer içeriğin üzerinde görünmesi için */
+            transition: top 0.5s ease-out; /* Animasyon geçişi */
+            font-weight: bold; /* Yazım hatasını düzelttim */
+            width: 200px;
+            height: 200px;
+            opacity: 0.9;
+            display: flex;
+            align-items:center;
+            
+        }
+        
+        .kapat-button {
+            position: absolute;
+            top: 10px; /* Kapat butonunun alert kutusunun üst kenarından uzaklığı */
+            right: 10px; /* Kapat butonunun alert kutusunun sağ kenarından uzaklığı */
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border: none;
+            border-radius: 50%; /* Yuvarlak buton */
+            color: white;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;  
+        }
+        
+        .kapat-button:hover {
+            transform: scale(1.2); /* Büyütme efekti */
+            opacity: 1; /* Hover olduğunda tamamen opak olması */
+        }
+        
+        #metin {
+            line-height: 1.5; /* Satır aralığını artır */
+            text-align: center; /* Metni ortala */
+            padding: 10px; /* Metinle kenar arasında boşluk */
+        }
+
+        #metin strong {
+            font-weight: bold;
+            color: yellow; /* Renk ayarı, isteğe bağlı değiştirilebilir */
+        }
     </style>
 </head>
-<body onload="initializeCalculator()">
+<body onload="yukle()">
+    <div class="alert" id="alertBox">
+        <span id="metin">Bu tuş, öncesinde girilen bir değerin <strong>kdv</strong> oranını %20 sayar ve girilen sayıya ekleyerek sonucu gösterir.</span> 
+        <button class="kapat-button" onclick="hideAlert()">x</button>
+    </div>
+    
     <div class="ana-ekran">
         <div class="input"><input class="sonuc-ekrani-input" readonly>			</div>
         <div class="grid-container">
@@ -107,81 +194,103 @@
             <div class="grid-item" onclick="kdvHesapla ()">kdv</div>
             <div class="grid-item" onclick="tusBasildi('0')">0</div>
             <div class="grid-item" onclick="tusBasildi(',')">,</div>
+            <div id="showAlertBtn" onclick="showAlert()">?</div>
             <div class="grid-item" id="equal-item" onclick="hesapla()">=</div>
         </div>
     </div> 
 
     <script>
-        function initializeCalculator() {
-            var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
-            sonucEkrani.value = '0'; // Sayfa yüklendiğinde ekranın başlangıç değeri 0 olsun
-        }
-
-        function tusBasildi(deger) {
-            var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
-
+       function yukle () {
+       		var icerik = document.querySelector('.sonuc-ekrani-input');
+            icerik.value = '0';
+       }
+       
+       function tusBasildi(deger) {
+       		var icerik = document.querySelector('.sonuc-ekrani-input');
+            
+            
             if (deger === 'C') {
-                sonucEkrani.value = '0'; // C'ye basıldığında sıfırla
-            } else if (sonucEkrani.value === '0' && deger !== ',') {
-                sonucEkrani.value = deger; // Sıfır ise ve virgül dışında herhangi bir sayıya basıldığında sıfırı temizle
-            } else {
-                sonucEkrani.value += deger; // Diğer durumlar için değeri ekle
+            	icerik.value = '0';
+            }else if (icerik.value === '0' && deger !== ',') {
+            	icerik.value = deger; 
+            }else {
+            	icerik.value += deger; 
             }
-        }
-
-        function hesapla() {
-            var expression = document.querySelector('.sonuc-ekrani-input').value;
-            var result = eval(expression.replace(',', '.'));
-            document.querySelector('.sonuc-ekrani-input').value = result.toString().replace('.', ',');
-        }
-
-        function geriSil() {
-            var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
-            var currentValue = sonucEkrani.value;
-
-            if (currentValue !== '0' && currentValue.length > 0) {
-                sonucEkrani.value = currentValue.slice(0, -1); // En sağdaki karakteri sil
-                if (sonucEkrani.value === '') {
-                    sonucEkrani.value = '0'; // Silinen son karakter sonucunda boşsa sıfırla
-                }
-            }
-        }
-
-        function yuzdeHesapla() {
-            var sonucEkrani = document.querySelector('.sonuc-ekrani-input');
-            var currentValue = parseFloat(sonucEkrani.value.replace(',', '.'));
-
-            if (!isNaN(currentValue)) {
-                sonucEkrani.value = (currentValue / 100).toString().replace('.', ',');
-            }
-        }
-        
-        function kdvHesapla () {
-        	var icerik = document.querySelector('.sonuc-ekrani-input');
+       }
+       
+       function hesapla () {
+       		var icerik = document.querySelector('.sonuc-ekrani-input').value;
+            
+            var sonuc = eval(icerik.replace(',', '.'));
+            document.querySelector('.sonuc-ekrani-input').value = sonuc.toString().replace('.', ',');
+            
+       }
+       
+       function kdvHesapla () {
+       		var icerik = document.querySelector('.sonuc-ekrani-input');
             var deger = parseFloat(icerik.value.replace(',', '.'));
             var kdvAl = ((deger / 100) * 20) + deger;
             document.querySelector('.sonuc-ekrani-input').value = kdvAl.toString().replace('.', ',');
-        }
-
-        document.addEventListener('keydown', function(event) {
+            
+         
+       }
+       
+       function yuzdeHesapla () {
+       		var icerik = document.querySelector('.sonuc-ekrani-input');
+            var deger = parseFloat(icerik.value.replace(',', '.'));
+            var YuzdeAl = deger / 100;
+            document.querySelector('.sonuc-ekrani-input').value = YuzdeAl.toString().replace('.', ',');
+       } 
+       
+       function geriSil() {
+       		var icerik = document.querySelector('.sonuc-ekrani-input');
+            var SonucEkrani = icerik.value;
+            
+            if (SonucEkrani !== '0' && SonucEkrani.length > 0) {
+            	icerik.value = SonucEkrani.slice(0, -1);
+            }if (icerik.value === '') {
+            	icerik.value = '0';
+            }
+            
+       }
+       
+       document.addEventListener('keydown', function(event) {
     var key = event.key.toLowerCase(); // Basılan tuşun küçük harf olarak alınması
 
-    
+    // Belirli tuşlara basıldığında ilgili fonksiyonları çağır
     if ((key >= '0' && key <= '9') || key === ',' || key === '+' || key === '-' || key === '*' || key === '/') {
-        tusBasildi(key === '*' ? '*' : key);
-    } else if (key === 'enter') {
+        tusBasildi(key === '*' ? 'x' : key);
+    } else if (key === 'enter') { // 'Enter' yerine 'enter' kullanılabilir
         hesapla();
-    } else if (key === 'backspace') { 
+    } else if (key === 'backspace') { // 'Backspace' yerine 'backspace' kullanılabilir
         geriSil();
-    } else if (key === 'end') { 
+    } else if (key === 'end') { // 'Escape' yerine 'escape' kullanılabilir
         tusBasildi('C');
     } else if (key === '%') {
         yuzdeHesapla();
-    } else if (key === 'k') { 
+    } else if (key === 'k') { // Küçük 'k' veya büyük 'K' tuşuna basıldığında kdvHesapla fonksiyonunu çağır
         kdvHesapla();
         event.preventDefault(); // Varsayılan davranışı engelle
     }
 });
+
+	function showAlert() {
+    var alertBox = document.getElementById('alertBox');
+    
+    // Mesaj kutusunu aşağı doğru kaydır
+    alertBox.style.top = '20px'; // veya istediğiniz bir mesafe
+}
+
+function hideAlert() {
+    var alertBox = document.getElementById('alertBox');
+    
+    // Mesaj kutusunu yukarı doğru kaydırarak gizle
+    alertBox.style.top = '-250px'; // Yukarıda başlangıç pozisyonuna geri döner
+}
+
+
+
+       
     </script>
 </body>
 </html>
