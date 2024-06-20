@@ -198,99 +198,93 @@
             <div class="grid-item" id="equal-item" onclick="hesapla()">=</div>
         </div>
     </div> 
-
-    <script>
+<script>
        function yukle () {
        		var icerik = document.querySelector('.sonuc-ekrani-input');
             icerik.value = '0';
        }
        
-       function tusBasildi(deger) {
-       		var icerik = document.querySelector('.sonuc-ekrani-input');
-            
-            
-            if (deger === 'C') {
-            	icerik.value = '0';
-            }else if (icerik.value === '0' && deger !== ',') {
-            	icerik.value = deger; 
-            }else {
-            	icerik.value += deger; 
-            }
-       }
-       
-       function hesapla () {
-       		var icerik = document.querySelector('.sonuc-ekrani-input').value;
-            
-            var sonuc = eval(icerik.replace(',', '.'));
-            document.querySelector('.sonuc-ekrani-input').value = sonuc.toString().replace('.', ',');
-            
-       }
-       
-       function kdvHesapla () {
-       		var icerik = document.querySelector('.sonuc-ekrani-input');
-            var deger = parseFloat(icerik.value.replace(',', '.'));
-            var kdvAl = ((deger / 100) * 20) + deger;
-            document.querySelector('.sonuc-ekrani-input').value = kdvAl.toString().replace('.', ',');
-            
-         
-       }
-       
-       function yuzdeHesapla () {
-       		var icerik = document.querySelector('.sonuc-ekrani-input');
-            var deger = parseFloat(icerik.value.replace(',', '.'));
-            var YuzdeAl = deger / 100;
-            document.querySelector('.sonuc-ekrani-input').value = YuzdeAl.toString().replace('.', ',');
-       } 
-       
-       function geriSil() {
-       		var icerik = document.querySelector('.sonuc-ekrani-input');
-            var SonucEkrani = icerik.value;
-            
-            if (SonucEkrani !== '0' && SonucEkrani.length > 0) {
-            	icerik.value = SonucEkrani.slice(0, -1);
-            }if (icerik.value === '') {
-            	icerik.value = '0';
-            }
-            
-       }
+    function tusBasildi(deger) {
+    var icerik = document.querySelector('.sonuc-ekrani-input');
+
+    if (deger === 'C') {
+        icerik.value = '0';
+    } else if (icerik.value === '0' && deger !== ',') {
+        icerik.value = deger;
+    } else if (deger === ',') {
+        var sonKelime = icerik.value.split(/[\+\-\*\/]/).pop(); // Son sayıyı alın
+        if (!sonKelime.includes(',')) { // Son sayıda henüz virgül yoksa
+            icerik.value += deger;
+        }
+    } else {
+        icerik.value += deger;
+    }
+}
+
+function hesapla() {
+    var icerik = document.querySelector('.sonuc-ekrani-input').value;
+    var sonuc = eval(icerik.replace(/,/g, '.'));
+    document.querySelector('.sonuc-ekrani-input').value = sonuc.toString().replace('.', ',');
+}
+
+function kdvHesapla() {
+    var icerik = document.querySelector('.sonuc-ekrani-input');
+    var deger = parseFloat(icerik.value.replace(',', '.'));
+    var kdvAl = ((deger / 100) * 20) + deger;
+    document.querySelector('.sonuc-ekrani-input').value = kdvAl.toString().replace('.', ',');
+}
+
+function yuzdeHesapla() {
+    var icerik = document.querySelector('.sonuc-ekrani-input');
+    var deger = parseFloat(icerik.value.replace(',', '.'));
+    var yuzdeAl = deger / 100;
+    document.querySelector('.sonuc-ekrani-input').value = yuzdeAl.toString().replace('.', ',');
+}
+
+function geriSil() {
+    var icerik = document.querySelector('.sonuc-ekrani-input');
+    var SonucEkrani = icerik.value;
+
+    if (SonucEkrani !== '0' && SonucEkrani.length > 0) {
+        icerik.value = SonucEkrani.slice(0, -1);
+    }
+    if (icerik.value === '') {
+        icerik.value = '0';
+    }
+}
+
        
        document.addEventListener('keydown', function(event) {
-    var key = event.key.toLowerCase(); // Basılan tuşun küçük harf olarak alınması
+            var key = event.key.toLowerCase(); // Basılan tuşun küçük harf olarak alınması
 
-    // Belirli tuşlara basıldığında ilgili fonksiyonları çağır
-    if ((key >= '0' && key <= '9') || key === ',' || key === '+' || key === '-' || key === '*' || key === '/') {
-        tusBasildi(key === '*' ? 'x' : key);
-    } else if (key === 'enter') { // 'Enter' yerine 'enter' kullanılabilir
-        hesapla();
-    } else if (key === 'backspace') { // 'Backspace' yerine 'backspace' kullanılabilir
-        geriSil();
-    } else if (key === 'end') { // 'Escape' yerine 'escape' kullanılabilir
-        tusBasildi('C');
-    } else if (key === '%') {
-        yuzdeHesapla();
-    } else if (key === 'k') { // Küçük 'k' veya büyük 'K' tuşuna basıldığında kdvHesapla fonksiyonunu çağır
-        kdvHesapla();
-        event.preventDefault(); // Varsayılan davranışı engelle
-    }
-});
+            // Belirli tuşlara basıldığında ilgili fonksiyonları çağır
+            if ((key >= '0' && key <= '9') || key === '.' || key === '+' || key === '-' || key === '*' || key === '/') {
+                tusBasildi(key === '*' ? 'x' : key);
+            } else if (key === 'enter') { // 'Enter' yerine 'enter' kullanılabilir
+                hesapla();
+            } else if (key === 'backspace') { // 'Backspace' yerine 'backspace' kullanılabilir
+                geriSil();
+            } else if (key === 'end') { // 'Escape' yerine 'escape' kullanılabilir
+                tusBasildi('C');
+            } else if (key === '%') {
+                yuzdeHesapla();
+            } else if (key === 'k') { // Küçük 'k' veya büyük 'K' tuşuna basıldığında kdvHesapla fonksiyonunu çağır
+                kdvHesapla();
+                event.preventDefault(); // Varsayılan davranışı engelle
+            }
+       });
 
 	function showAlert() {
-    var alertBox = document.getElementById('alertBox');
-    
-    // Mesaj kutusunu aşağı doğru kaydır
-    alertBox.style.top = '20px'; // veya istediğiniz bir mesafe
-}
+        var alertBox = document.getElementById('alertBox');
+        // Mesaj kutusunu aşağı doğru kaydır
+        alertBox.style.top = '20px'; // veya istediğiniz bir mesafe
+    }
 
-function hideAlert() {
-    var alertBox = document.getElementById('alertBox');
-    
-    // Mesaj kutusunu yukarı doğru kaydırarak gizle
-    alertBox.style.top = '-250px'; // Yukarıda başlangıç pozisyonuna geri döner
-}
-
-
-
-       
+    function hideAlert() {
+        var alertBox = document.getElementById('alertBox');
+        // Mesaj kutusunu yukarı doğru kaydırarak gizle
+        alertBox.style.top = '-250px'; // Yukarıda başlangıç pozisyonuna geri döner
+    }
     </script>
 </body>
 </html>
